@@ -89,11 +89,10 @@ def part2():
         coordinates.append(coordinates[0])  # close the loop
         n = len(coordinates)
         area = 0.5 * abs(sum(
-            coordinates[i][0] * coordinates[(i + 1) % n][1] - coordinates[(i + 1) % n][0] * coordinates[i][1] for i in
-            range(n)))
+            coordinates[i][0] * coordinates[(i + 1) % n][1] - coordinates[(i + 1) % n][0] * coordinates[i][1] for i in range(n)))
         return int(area)
 
-    # find area that can be covered by len(order) vertices if no points are inside the loop:
+    # find area covered by the loop if no points are inside the loop:
     base_area = (len(order) // 2 - 1)
 
     # every point inside the loop increases this area by 1, so take the difference of areas
