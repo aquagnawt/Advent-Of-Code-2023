@@ -6,8 +6,8 @@ def part1():
     for line in f:
         grid.append(line.strip())
 
-    visited = [[False] * len(grid[0]) for _ in range(len(grid))]
-    done = []
+    visited = set()
+    done = set()
 
     queue = [(0, -1, 'E')]
 
@@ -16,8 +16,8 @@ def part1():
         if c != -1:
             if (r, c, d) in done:
                 continue
-            done.append((r, c, d))
-            visited[r][c] = True
+            done.add((r, c, d))
+            visited.add((r, c))
         if d == 'E':
             if c + 1 >= len(grid[0]):
                 continue
@@ -67,10 +67,7 @@ def part1():
             else:
                 queue.append((r - 1, c, 'N'))
 
-    total = 0
-    for line in visited:
-        total += sum(line)
-    print(total)
+    print(len(visited))
 
 
 def part2():
@@ -92,16 +89,16 @@ def part2():
     best = 0
 
     for start in starts:
-        visited = [[False] * len(grid[0]) for _ in range(len(grid))]
-        done = []
+        visited = set()
+        done = set()
         queue = [start]
         while queue:
             r, c, d = queue.pop()
             if 0 <= c < len(grid[0]) and 0 <= r < len(grid):
                 if (r, c, d) in done:
                     continue
-                done.append((r, c, d))
-                visited[r][c] = True
+                done.add((r, c, d))
+                visited.add((r, c))
             if d == 'E':
                 if c + 1 >= len(grid[0]):
                     continue
@@ -151,11 +148,7 @@ def part2():
                 else:
                     queue.append((r - 1, c, 'N'))
 
-        total = 0
-        for line in visited:
-            total += sum(line)
-
-        best = max(best, total)
+        best = max(best, len(visited))
 
     print(best)
 
