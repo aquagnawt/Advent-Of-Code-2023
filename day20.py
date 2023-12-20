@@ -1,3 +1,30 @@
+import math
+
+class Flipflop:
+    def __init__(self, name, targets):
+        self.name = name
+        self.targets = targets
+        self.strength = 0
+
+    def __eq__(self, other):
+        return self.name == other.name and self.strength == other.strength
+
+
+class Conjunction:
+    def __init__(self, name, targets):
+        self.name = name
+        self.sources = []
+        self.targets = targets
+
+    def __eq__(self, other):
+        return self.name == other.name and self.sources == other.sources
+
+def lcm(ns):
+    result = ns[0]
+    for n in ns[1:]:
+        result = abs(result * n) // math.gcd(result, n)
+    return result
+
 def part1():
     f = open("day20input.txt", 'r')
 
@@ -5,18 +32,6 @@ def part1():
     flipflops = {}
     conjunctions = {}
     sources = {}
-
-    class Flipflop:
-        def __init__(self, name, targets):
-            self.name = name
-            self.targets = targets
-            self.strength = 0
-
-    class Conjunction:
-        def __init__(self, name, targets):
-            self.name = name
-            self.sources = []
-            self.targets = targets
 
     for line in f:
         line = line.strip()
@@ -81,36 +96,18 @@ def part1():
                     queue.append((sending, current, t))
 
     print(low_count * high_count)
+    f.close()
 
 
 def part2():
-    import math
-
     f = open("day20input.txt", 'r')
 
     start = []
     flipflops = {}
     conjunctions = {}
     sources = {}
-    final_conj = set()
-
-    class Flipflop:
-        def __init__(self, name, targets):
-            self.name = name
-            self.targets = targets
-            self.strength = 0
-
-        def __eq__(self, other):
-            return self.name == other.name and self.strength == other.strength
-
-    class Conjunction:
-        def __init__(self, name, targets):
-            self.name = name
-            self.sources = []
-            self.targets = targets
-
-        def __eq__(self, other):
-            return self.name == other.name and self.sources == other.sources
+    final_conj = set()  # sources of the kz conjunction, which leads to rx. we calculate how many presses it takes for
+                        # each source to send a high signal
 
     for line in f:
         line = line.strip()
@@ -122,7 +119,7 @@ def part2():
                 if d not in sources:
                     sources[d] = []
                 sources[d].append((0, s))
-                if d == 'kz':  # kz directs to rx
+                if d == 'kz':
                     final_conj.add(s)
         elif '&' in line:
             s, t = line[1:].split(" -> ")
@@ -132,7 +129,7 @@ def part2():
                 if d not in sources:
                     sources[d] = []
                 sources[d].append((0, s))
-                if d == 'kz':  # kz directs to rx
+                if d == 'kz':
                     final_conj.add(s)
         else:
             targets = line.split(" -> ")[1].split(", ")
@@ -183,13 +180,8 @@ def part2():
         if finished:
             break
 
-    def lcm(ns):
-        result = ns[0]
-        for n in ns[1:]:
-            result = abs(result * n) // math.gcd(result, n)
-        return result
-
     print(lcm(cycles))
+    f.close()
 
 
 part1()
